@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NC College Comparison — Merit Scholarship Analysis</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 {
+            font-size: 1.8rem;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            color: #718096;
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+        .student-profile {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 28px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .student-profile .stat {
+            text-align: center;
+        }
+        .student-profile .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .student-profile .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.85;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tier-label {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        .tier-1 { background: #c6f6d5; color: #22543d; }
+        .tier-2 { background: #fefcbf; color: #744210; }
+        .tier-3 { background: #fed7d7; color: #822727; }
+        .tier-section { margin-bottom: 30px; }
+        .tier-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #4a5568;
+        }
+        .school-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px;
+        }
+        .school-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .school-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        .school-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
+        .school-emoji { margin-right: 6px; }
+        .school-vibe {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            margin-bottom: 14px;
+            font-style: italic;
+        }
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #f7fafc;
+        }
+        .cost-row:last-child { border-bottom: none; }
+        .cost-label { color: #718096; }
+        .cost-value { font-weight: 600; color: #2d3748; }
+        .cost-value.merit { color: #38a169; }
+        .cost-value.net { color: #2b6cb0; font-size: 1rem; }
+        .cost-value.total {
+            color: #1a202c;
+            font-size: 1.15rem;
+            font-weight: 800;
+        }
+        .school-notes {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #edf2f7;
+            font-size: 0.82rem;
+            color: #718096;
+        }
+        .school-notes strong { color: #e53e3e; }
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 4px;
+        }
+        .tag-auto { background: #c6f6d5; color: #22543d; }
+        .tag-competitive { background: #fefcbf; color: #744210; }
+        .tag-small { background: #e9d8fd; color: #553c9a; }
+        .tag-honors { background: #bee3f8; color: #2a4365; }
+        .tag-womens { background: #fbb6ce; color: #702459; }
+
+        .ranking-section {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            margin-top: 30px;
+        }
+        .ranking-section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            color: #1a202c;
+        }
+        .rank-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f7fafc;
+        }
+        .rank-item:last-child { border-bottom: none; }
+        .rank-num {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #cbd5e0;
+            width: 40px;
+            text-align: center;
+        }
+        .rank-num.top3 { color: #38a169; }
+        .rank-school { flex: 1; font-weight: 600; }
+        .rank-cost { font-weight: 700; color: #2b6cb0; }
+        .rank-bar {
+            height: 8px;
+            background: #edf2f7;
+            border-radius: 4px;
+            flex: 1;
+            margin: 0 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .rank-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+        }
+
+        .disclaimer {
+            margin-top: 30px;
+            padding: 16px 20px;
+            background: #fffbeb;
+            border: 1px solid #f6e05e;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            color: #744210;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #a0aec0;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 600px) {
+            .school-grid { grid-template-columns: 1fr; }
+            .student-profile { gap: 20px; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 NC College Comparison</h1>
+        <p class="subtitle">Merit Scholarship Analysis — April 2026</p>
+
+        <div class="student-profile">
+            <div class="stat">
+                <div class="stat-value">4.56</div>
+                <div class="stat-label">Weighted GPA</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">32</div>
+                <div class="stat-label">ACT Score (of 36)</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">NC</div>
+                <div class="stat-label">In-State Resident</div>
+            </div>
+        </div>
+
+        <!-- TIER 1 -->
+        <div class="tier-section">
+            <span class="tier-label tier-1">💰 Tier 1 — Best Value (Under $100k / 4 years)</span>
+            <div class="school-grid">
+
+                <div class="school-card">
+                    <div class="school-name"><span class="school-emoji">🏖️</span>UNCW</div>
+                    <div class="school-vibe">Mid-size, beach town, solid Honors College</div>
+                    <span class="tag tag-honors">Honors College</span>
+                    <span class="tag tag-competitive">Competitive Merit</span>
+                    <div class="cost-row"><span class="cost-label">Total COA/yr</span><span class="cost-value">~$22,000</span></div>
+                    <div class="cost-row"><span class="cost-label">Est. Merit/yr</span><span class="cost-value merit">-$2,000 – $5,000</span></div>
+                    <div class="cost-row"><span class="cost-label">Net Cost/yr</span><span class="cost-value net">~$17,000 – $20,000</span></div>
+                    <div class="cost-row"><span class="cost-label">4-Year Estimate</span><span class="cost-value total">$68,000 – $80,000</span></div>
+                    <div class="school-notes">Full-ride possible via Distinguished Merit Scholarship. Honors College creates small-community feel. Apply by Nov 1.</div>
+                </div>
+
+                <div class="school-card">
+                    <div class="school-name"><span class="school-emoji">🏔️</span>App State</div>
+                    <div class="school-vibe">Outdoorsy, mountain campus, strong Honors College</div>
+                    <span class="tag tag-auto">Auto Merit</span>
+                    <span class="tag tag-honors">Honors College</span>
+                    <div class="cost-row"><span class="cost-label">Total COA/yr</span><span class="cost-value">~$22,000</span></div>
+                    <div class="cost-row"><span class="cost-label">Est. Merit/yr</span><span class="cost-value merit">-$3,000 – $4,000</span></div>
+                    <div class="cost-row"><span class="cost-label">Net Cost/yr</span><span class="cost-value net">~$18,000 – $19,000</span></div>
+                    <div class="cost-row"><span class="cost-label">4-Year Estimate</span><span class="cost-value total">$72,000 – $76,000</span></div>
+                    <div class="school-notes">Chancellor's Scholarship (full tuition) is competitive — her stats make her a strong candidate. Stats well above average here. Deadline: Nov 30.</div>
+                </div>
+
+                <div class="school-card">
+                    <div class="school-name"><span class="school-emoji">👩‍🎓</span>Salem College</div>
+                    <div class="school-vibe">Tiny women's college (~500), Winston-Salem, oldest women's college in the South</div>
+                    <span class="tag tag-auto">Auto Merit</span>
+                    <span class="tag tag-womens">Women's College</span>
+                    <span class="tag tag-small">Very Small</span>
+                    <div class="cost-row"><span class="cost-label">Total COA/yr</span><span class="cost-value">~$49,500</span></div>
+                    <div class="cost-row"><span class="cost-label">Est. Merit/yr</span><span class="cost-value merit">-$21,000 – $26,000</span></div>
+                    <div class="cost-row"><span class="cost-label">Net Cost/yr</span><span class="cost-value net">~$23,500 – $28,500</span></div>
+                    <div class="cost-row"><span class="cost-label">4-Year Estimate</span><span class="cost-value total">$94,000 – $114,000</span></div>
+                    <div class="school-notes">🔥 Sleeper pick. Full tuition competitive scholarships available (Chatham, Elberson, Whitaker). 100% of students receive merit. Could rival UNC pricing.</div>
+                </div>
+
+                <div class="school-card">
+                    <div class="school-name"><span class="school-emoji">🐺</span>NC State</div>
+                    <div class="school-vibe">Large university, strong STEM, Raleigh</div>
+                    <span class="tag tag-competitive">Competitive Merit</span>
+                    <span class="tag tag-honors">Honors College</span>
+                    <div class="cost-row"><span class="cost-label">Total COA/yr</span><span class="cost-value">~$28,500</span></div>
+                    <div class="cost-row"><span class="cost-label">Est. Merit/yr</span><span class="cost-value merit">-$0 – $5,000</span></div>
+                    <div class="cost-row"><span class="cost-label">Net Cost/yr</span><span class="cost-value net">~$23,500 – $28,500</span></div>
+                    <div class="cost-row"><span class="cost-label">4-Year Estimate</span><span class="cost-value total">$94,000 – $114,000</span></div>
+                    <div class="school-notes"><strong>⚠️ Must complete Pack ASSIST</strong> to be considered for most scholarships. No automatic merit. Park Scholars = full ride but extremely competitive.</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TIER 2 -->
+        <div class="tier-section">
+            <span class="tier-label tier-2">📊 Tier 2 — Solid Value ($100k–$140k / 4 years)</span>
+            <div class="school-grid">
+
+                <div class="school-card">
+                    <div class="school-name"><span class="school-emoji">🏛️</span>UNC Chapel Hill</div>
+                    <div class="school-vibe">Prestigious flagship, large (20k undergrads)</div>
+                    <span class="tag tag-competitive">Competitive Merit</span>
+                    <span class="tag tag-honors">Honors College</span>
+                    <div class="cost-row"><span class="cost-label">Total COA/yr</span><span class="cost-value">~$26,000</span></div>
+                    <div class="cost-row"><span class="cost-label">Est. Merit/yr</span><span class="cost-value merit">~$0 (only ~150 awarded)</span></div>
+                    <div class="cost-row"><span class="cost-label">Net Cost/yr</span><span class="cost-value net">~$26,000</span></div>
+                    <div class="cost-row"><span class="cost-label">4-Year Estimate</span><span class="cost-value total">~$104,000</span></div>
+                    <div class="school-notes"><strong>⚠️ Early Action deadline: Oct 15.</strong> Morehead-Cain & Robertson are lottery-level competitive. Cheap due to in-state tuition, not merit. 19% acceptance rate.</div>
+                </div>
+
+                <div class="school-card">
+                    <div class="school-name"><span class="school-emoji">👩‍🎓</span>Meredith College</div>
+                    <div class="school-vibe">Small women's college (~1,600), Raleigh — she loves this campus</div>
+                    <span class="tag tag-auto">Auto Merit</span>
+                    <span class="tag tag-womens">Women's College</span>
+                    <span class="tag tag-small">Small</span>
+                    <div class="cost-row"><span class="cost-label">Total COA/yr</span><span class="cost-value">~$63,500</span></div>
+                    <div class="cost-row"><span class="cost-label">Est. Merit/yr</span><span class="cost-value merit">-$30,000 (automatic, highest tier)</span></div>
+                    <div class="cost-row"><span class="cost-label">Net Cost/yr</span><span class="cost-value net">~$33,500</span></div>
+                    <div class="cost-row"><span class="cost-label">4-Year Estimate</span><span class="cost-value total">~$134,000</span></div>
+                    <div class="school-notes">✅ Guaranteed $30k/yr — no extra applications needed. She visited and loves the feel. Only ~$8,500/yr more than UNC. Additional scholarships may be available.</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TIER 3 -->
+        <div class="tier-section">
+            <span class="tier-label tier-3">⚠️ Tier 3 — Premium ($160k+ / 4 years)</span>
+            <div class="school-grid">
+
+                <div class="school-card">
+                    <div class="school-name"><span class="school-emoji">✨</span>High Point University</div>
+                    <div class="school-vibe">Resort-like campus, small (5k), heavy amenities</div>
+                    <span class="tag tag-competitive">Competitive Merit</span>
+                    <span class="tag tag-honors">Honors College</span>
+                    <div class="cost-row"><span class="cost-label">Total COA/yr</span><span class="cost-value">~$58,000</span></div>
+                    <div class="cost-row"><span class="cost-label">Est. Merit/yr</span><span class="cost-value merit">-$10,000 – $17,000</span></div>
+                    <div class="cost-row"><span class="cost-label">Net Cost/yr</span><span class="cost-value net">~$41,000 – $48,000</span></div>
+                    <div class="cost-row"><span class="cost-label">4-Year Estimate</span><span class="cost-value total">$164,000 – $192,000</span></div>
+                    <div class="school-notes">Presidential Founders (full tuition) is very competitive. Nice campus but high sticker price even with merit.</div>
+                </div>
+
+                <div class="school-card">
+                    <div class="school-name"><span class="school-emoji">🌳</span>Elon University</div>
+                    <div class="school-vibe">Beautiful campus, mid-size (~6k), engaged community</div>
+                    <span class="tag tag-auto">Auto Merit</span>
+                    <span class="tag tag-honors">Honors Fellows</span>
+                    <div class="cost-row"><span class="cost-label">Total COA/yr</span><span class="cost-value">~$62,400</span></div>
+                    <div class="cost-row"><span class="cost-label">Est. Merit/yr</span><span class="cost-value merit">-$10,000 – $12,000</span></div>
+                    <div class="cost-row"><span class="cost-label">Net Cost/yr</span><span class="cost-value net">~$50,400 – $52,400</span></div>
+                    <div class="cost-row"><span class="cost-label">4-Year Estimate</span><span class="cost-value total">$202,000 – $210,000</span></div>
+                    <div class="school-notes">Honors Fellows programs (separate application) could significantly increase merit. Her ACT 32 is well above the 28 mid-50%.</div>
+                </div>
+
+                <div class="school-card">
+                    <div class="school-name"><span class="school-emoji">🌲</span>Wake Forest</div>
+                    <div class="school-vibe">Elite, small (5k), Winston-Salem</div>
+                    <span class="tag tag-competitive">Competitive Only</span>
+                    <div class="cost-row"><span class="cost-label">Total COA/yr</span><span class="cost-value">~$80,000</span></div>
+                    <div class="cost-row"><span class="cost-label">Est. Merit/yr</span><span class="cost-value merit">~$0 (no automatic merit)</span></div>
+                    <div class="cost-row"><span class="cost-label">Net Cost/yr</span><span class="cost-value net">~$80,000</span></div>
+                    <div class="cost-row"><span class="cost-label">4-Year Estimate</span><span class="cost-value total">~$320,000</span></div>
+                    <div class="school-notes">No automatic merit. ACT 32 is below their mid-50% (33). Carswell/Reynolds/Stamps scholarships are highly competitive. CSS Profile required. Hard to justify financially.</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- RANKING -->
+        <div class="ranking-section">
+            <h2>📈 Ranked by Estimated 4-Year Net Cost</h2>
+
+            <div class="rank-item">
+                <span class="rank-num top3">1</span>
+                <span class="rank-school">🏖️ UNCW</span>
+                <div class="rank-bar"><div class="rank-bar-fill" style="width: 25%"></div></div>
+                <span class="rank-cost">$68–80k</span>
+            </div>
+            <div class="rank-item">
+                <span class="rank-num top3">2</span>
+                <span class="rank-school">🏔️ App State</span>
+                <div class="rank-bar"><div class="rank-bar-fill" style="width: 24%"></div></div>
+                <span class="rank-cost">$72–76k</span>
+            </div>
+            <div class="rank-item">
+                <span class="rank-num top3">3</span>
+                <span class="rank-school">👩‍🎓 Salem College</span>
+                <div class="rank-bar"><div class="rank-bar-fill" style="width: 35%"></div></div>
+                <span class="rank-cost">$94–114k</span>
+            </div>
+            <div class="rank-item">
+                <span class="rank-num">4</span>
+                <span class="rank-school">🐺 NC State</span>
+                <div class="rank-bar"><div class="rank-bar-fill" style="width: 35%"></div></div>
+                <span class="rank-cost">$94–114k</span>
+            </div>
+            <div class="rank-item">
+                <span class="rank-num">5</span>
+                <span class="rank-school">🏛️ UNC Chapel Hill</span>
+                <div class="rank-bar"><div class="rank-bar-fill" style="width: 33%"></div></div>
+                <span class="rank-cost">~$104k</span>
+            </div>
+            <div class="rank-item">
+                <span class="rank-num">6</span>
+                <span class="rank-school">👩‍🎓 Meredith</span>
+                <div class="rank-bar"><div class="rank-bar-fill" style="width: 42%"></div></div>
+                <span class="rank-cost">~$134k</span>
+            </div>
+            <div class="rank-item">
+                <span class="rank-num">7</span>
+                <span class="rank-school">✨ High Point</span>
+                <div class="rank-bar"><div class="rank-bar-fill" style="width: 59%"></div></div>
+                <span class="rank-cost">$164–192k</span>
+            </div>
+            <div class="rank-item">
+                <span class="rank-num">8</span>
+                <span class="rank-school">🌳 Elon</span>
+                <div class="rank-bar"><div class="rank-bar-fill" style="width: 65%"></div></div>
+                <span class="rank-cost">$202–210k</span>
+            </div>
+            <div class="rank-item">
+                <span class="rank-num">9</span>
+                <span class="rank-school">🌲 Wake Forest</span>
+                <div class="rank-bar"><div class="rank-bar-fill" style="width: 100%"></div></div>
+                <span class="rank-cost">~$320k</span>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <strong>⚠️ Disclaimer:</strong> All figures are estimates based on publicly available 2025-2026 and 2026-2027 data. Actual costs may vary. Merit scholarship amounts are based on published criteria for a student with a 4.56 weighted GPA and 32 ACT. Competitive scholarships are not guaranteed. Room & board estimates assume standard on-campus housing. Additional need-based aid, department-specific scholarships, and outside scholarships could further reduce costs. Always verify directly with each school's financial aid office.
+        </div>
+
+        <div class="footer">
+            <p>Generated April 2026 · Updated as new information becomes available</p>
+        </div>
+    </div>
+</body>
+</html>
