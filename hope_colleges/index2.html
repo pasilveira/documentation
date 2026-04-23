@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NC College Comparison — Merit &amp; PA Pathway Analysis</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f7fa;color:#2d3748;line-height:1.6;padding:20px}
+.container{max-width:1200px;margin:0 auto}
+h1{font-size:1.8rem;color:#1a202c;margin-bottom:8px}
+.subtitle{color:#718096;font-size:1rem;margin-bottom:30px}
+.profile{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:20px 28px;border-radius:12px;margin-bottom:16px;display:flex;gap:40px;flex-wrap:wrap;align-items:center}
+.profile .stat{text-align:center}
+.profile .stat-value{font-size:2rem;font-weight:700}
+.profile .stat-label{font-size:.8rem;opacity:.85;text-transform:uppercase;letter-spacing:.5px}
+.retake{background:#ebf8ff;border:1px solid #90cdf4;border-radius:8px;padding:10px 16px;font-size:.85rem;color:#2b6cb0;margin-bottom:30px}
+.pa-banner{background:linear-gradient(135deg,#e6fffa,#ebf8ff);border:1px solid #81e6d9;border-radius:12px;padding:24px 28px;margin-bottom:30px}
+.pa-banner h2{font-size:1.2rem;color:#234e52;margin-bottom:14px}
+.pa-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.pa-stat{background:#fff;border-radius:8px;padding:12px 16px;border:1px solid #b2f5ea}
+.pa-stat-label{font-size:.75rem;color:#718096;text-transform:uppercase;letter-spacing:.5px}
+.pa-stat-value{font-size:1.05rem;font-weight:700;color:#234e52;margin-top:2px}
+.prereqs{background:#fff;border-radius:8px;padding:14px 18px;border:1px solid #b2f5ea;margin-top:12px}
+.prereqs h3{font-size:.9rem;font-weight:700;color:#2d3748;margin-bottom:8px}
+.prereq-list{display:flex;flex-wrap:wrap;gap:6px}
+.ptag{background:#e6fffa;color:#234e52;border:1px solid #81e6d9;border-radius:4px;padding:2px 8px;font-size:.78rem;font-weight:600}
+.pa-legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid #b2f5ea;font-size:.82rem}
+.tier-label{display:inline-block;padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+.t1{background:#c6f6d5;color:#22543d}.t2{background:#fefcbf;color:#744210}.t3{background:#fed7d7;color:#822727}
+.tier-section{margin-bottom:30px}
+.school-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.card{background:#fff;border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid #e2e8f0;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.card.hl{border:2px solid #38a169}
+.sname{font-size:1.15rem;font-weight:700;color:#1a202c;margin-bottom:4px}
+.svibe{font-size:.85rem;color:#a0aec0;margin-bottom:12px;font-style:italic}
+.tags{margin-bottom:12px;display:flex;flex-wrap:wrap;gap:4px}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600}
+.ta{background:#c6f6d5;color:#22543d}.tc{background:#fefcbf;color:#744210}.ts{background:#e9d8fd;color:#553c9a}
+.th{background:#bee3f8;color:#2a4365}.tw{background:#fbb6ce;color:#702459}.tb{background:#e9d8fd;color:#44337a}
+.pa-badge{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:6px;font-size:.8rem;font-weight:600;margin-bottom:12px;border:1px solid;line-height:1.4}
+.pb-top{background:#f0fff4;border-color:#68d391;color:#22543d}
+.pb-str{background:#ebf8ff;border-color:#90cdf4;color:#2a4365}
+.pb-gd{background:#fefcbf;border-color:#f6e05e;color:#744210}
+.pb-std{background:#f7fafc;border-color:#cbd5e0;color:#4a5568}
+.cr{display:flex;justify-content:space-between;padding:5px 0;font-size:.88rem;border-bottom:1px solid #f7fafc}
+.cr:last-child{border-bottom:none}.cl{color:#718096}.cv{font-weight:600;color:#2d3748}
+.cv.m{color:#38a169}.cv.n{color:#2b6cb0;font-size:.95rem}.cv.t{color:#1a202c;font-size:1.1rem;font-weight:800}
+.notes{margin-top:12px;padding-top:12px;border-top:1px solid #edf2f7;font-size:.81rem;color:#718096}
+.notes strong{color:#e53e3e}.notes .g{color:#276749;font-weight:600}.notes .b{color:#2b6cb0;font-weight:600}
+.rank-sec{background:#fff;border-radius:12px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid #e2e8f0;margin-top:30px}
+.rank-sec h2{font-size:1.2rem;margin-bottom:16px;color:#1a202c}
+.ri{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid #f7fafc}
+.ri:last-child{border-bottom:none}
+.rn{font-size:1.3rem;font-weight:800;color:#cbd5e0;width:36px;text-align:center;flex-shrink:0}
+.rn.top{color:#38a169}.rs{flex:1;font-weight:600;font-size:.9rem}
+.rc{font-weight:700;color:#2b6cb0;font-size:.88rem;min-width:105px;text-align:right}
+.rb{height:8px;background:#edf2f7;border-radius:4px;flex:1;margin:0 12px;overflow:hidden;min-width:60px;max-width:160px}
+.rbf{height:100%;border-radius:4px;background:linear-gradient(90deg,#48bb78,#38a169)}
+.rpa{font-size:.9rem;margin-left:6px;flex-shrink:0}
+.act-box{background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid #e2e8f0;margin-top:30px}
+.act-box h2{font-size:1.15rem;margin-bottom:14px;color:#1a202c}
+.ar{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #f7fafc;font-size:.88rem}
+.ar:last-child{border-bottom:none}
+.ab{background:#667eea;color:#fff;border-radius:6px;padding:3px 10px;font-weight:700;font-size:.9rem;min-width:36px;text-align:center;flex-shrink:0}
+.au{color:#2d3748;line-height:1.5}.au strong{color:#276749}
+.pa-map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.pmi{background:#f0fff4;border:1px solid #9ae6b4;border-radius:8px;padding:12px;font-size:.84rem}
+.pmi strong{display:block;margin-bottom:2px}.pmi span{color:#718096;font-size:.8rem}
+.disc{margin-top:30px;padding:16px 20px;background:#fffbeb;border:1px solid #f6e05e;border-radius:8px;font-size:.81rem;color:#744210}
+.footer{text-align:center;margin-top:24px;color:#a0aec0;font-size:.8rem}
+@media(max-width:600px){.school-grid{grid-template-columns:1fr}.profile{gap:20px}h1{font-size:1.4rem}.rb{display:none}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>&#127891; NC College Comparison</h1>
+<p class="subtitle">Merit Scholarship &amp; PA Pathway Analysis &mdash; Updated April 2026</p>
+<div class="profile">
+  <div class="stat"><div class="stat-value">4.56</div><div class="stat-label">Weighted GPA</div></div>
+  <div class="stat"><div class="stat-value">32</div><div class="stat-label">ACT (Retaking &uarr;)</div></div>
+  <div class="stat"><div class="stat-value">NC</div><div class="stat-label">In-State Resident</div></div>
+  <div class="stat"><div class="stat-value">PA</div><div class="stat-label">Goal: Physician Assistant</div></div>
+</div>
+<div class="retake">&#128161; <strong>ACT Retake Upside:</strong> A score of 34+ unlocks the Meredith Presidential Scholarship (full ride ~$230k), strengthens App State Chancellor&rsquo;s and NC State Park candidacy, and puts Wake Forest merit in play. See the ACT Impact table at the bottom.</div>
+
+<div class="pa-banner">
+  <h2>&#129658; Physician Assistant Career Path &mdash; What You Need to Know</h2>
+  <div class="pa-grid">
+    <div class="pa-stat"><div class="pa-stat-label">Degree Required</div><div class="pa-stat-value">Master&rsquo;s (MMS or MPAS)</div></div>
+    <div class="pa-stat"><div class="pa-stat-label">PA School Length</div><div class="pa-stat-value">24&ndash;27 months</div></div>
+    <div class="pa-stat"><div class="pa-stat-label">Total Timeline</div><div class="pa-stat-value">~6&ndash;7 years after HS</div></div>
+    <div class="pa-stat"><div class="pa-stat-label">Avg PA Salary (NC)</div><div class="pa-stat-value">$120k&ndash;$130k+</div></div>
+    <div class="pa-stat"><div class="pa-stat-label">Healthcare Hours Needed</div><div class="pa-stat-value">1,000&ndash;3,000 hrs</div></div>
+    <div class="pa-stat"><div class="pa-stat-label">PA Programs in NC</div><div class="pa-stat-value">12+ accredited</div></div>
+  </div>
+  <div class="prereqs">
+    <h3>&#128218; Typical Pre-PA Prerequisites &mdash; Plan Your Major Around These</h3>
+    <div class="prereq-list">
+      <span class="ptag">Biology I &amp; II + Lab</span><span class="ptag">General Chemistry I &amp; II + Lab</span>
+      <span class="ptag">Organic Chemistry + Lab</span><span class="ptag">Biochemistry</span>
+      <span class="ptag">Anatomy &amp; Physiology I &amp; II</span><span class="ptag">Microbiology + Lab</span>
+      <span class="ptag">Genetics</span><span class="ptag">Statistics</span><span class="ptag">Psychology</span><span class="ptag">Medical Terminology</span>
+    </div>
+    <p style="font-size:.8rem;color:#718096;margin-top:10px"><strong>Best undergrad majors:</strong> Biology, Biochemistry, Exercise Science, Kinesiology, or Health Sciences. Target 3.5+ overall and science GPA (3.2 is the floor). You&rsquo;ll need 1,000&ndash;3,000 direct patient care hours &mdash; start early as an EMT, CNA, or medical scribe.</p>
+  </div>
+  <div class="pa-legend">
+    <div>&#127942; <strong>Has own PA program</strong> &mdash; home-field advantage &amp; faculty pipeline</div>
+    <div>&#9989; <strong>Strong pre-PA</strong> &mdash; dedicated advising, high placement rates</div>
+    <div>&#127939; <strong>Good pre-health</strong> &mdash; solid biology + standard advising</div>
+    <div>&#9898; <strong>Standard</strong> &mdash; adequate but less specialized for PA</div>
+  </div>
+</div>
+
+<div class="tier-section">
+<span class="tier-label t1">&#128176; Tier 1 &mdash; Best Value (Under $100k / 4 years)</span>
+<div class="school-grid">
+
+<div class="card">
+<div class="sname">&#127956;&#65039; Appalachian State University</div>
+<div class="svibe">Mid-size (21k), mountain campus in Boone, outdoorsy culture, strong Honors College</div>
+<div class="tags"><span class="tag ta">Auto Merit ($3k/yr)</span><span class="tag th">Honors College</span></div>
+<div class="pa-badge pb-str">&#9989; Strong Pre-PA &mdash; Dedicated Health Professions Advising (HPA) office; Biology&rsquo;s Cellular &amp; Molecular concentration ideal for pre-PA; 75%+ health-school placement for active HPA participants</div>
+<div class="cr"><span class="cl">Total COA / yr (est. 2026-27)</span><span class="cv">~$25,000</span></div>
+<div class="cr"><span class="cl">Auto Merit / yr (AES &mdash; no application needed)</span><span class="cv m">&minus;$3,000</span></div>
+<div class="cr"><span class="cl">Net Cost / yr</span><span class="cv n">~$22,000</span></div>
+<div class="cr"><span class="cl">4-Year Estimate</span><span class="cv t">~$88,000</span></div>
+<div class="notes"><span class="g">&#10003; Best guaranteed value on this entire list.</span> The Appalachian Excellence Scholarship ($3k/yr) is automatic &mdash; no separate application. Apply by <strong>Nov 30</strong>.<br><br>The <strong>Chancellor&rsquo;s Scholarship</strong> covers full tuition, fees, room &amp; board &mdash; but only ~10&ndash;11 students per year. Requires Honors College admission + separate application. Her stats make her a candidate, especially with a higher ACT.</div>
+</div>
+
+<div class="card">
+<div class="sname">&#127973;&#65039; East Carolina University (ECU)</div>
+<div class="svibe">Large (28k), Greenville &mdash; home of Brody School of Medicine; NC&rsquo;s health sciences powerhouse</div>
+<div class="tags"><span class="tag tc">Competitive Merit</span><span class="tag tb">Health Sciences Hub</span></div>
+<div class="pa-badge pb-top">&#127942; Has Own PA Program &mdash; ECU&rsquo;s established 27-month PA program + Vidant Medical Center next door = unmatched clinical hours access; Brody School of Medicine creates an exceptional pre-PA environment</div>
+<div class="cr"><span class="cl">Total COA / yr (est. 2026-27)</span><span class="cv">~$25,500</span></div>
+<div class="cr"><span class="cl">Merit / yr</span><span class="cv m">varies &mdash; competitive</span></div>
+<div class="cr"><span class="cl">Net Cost / yr (est. w/ merit)</span><span class="cv n">~$20,000&ndash;$25,000</span></div>
+<div class="cr"><span class="cl">4-Year Estimate</span><span class="cv t">~$80,000&ndash;$100,000</span></div>
+<div class="notes"><span class="b">&#128161; Potentially the best value for a PA-bound student in NC &mdash; and often overlooked.</span> Vidant Medical Center is literally across the street for clinical hours. The College of Allied Health Sciences offers degrees purpose-built for pre-PA students.<br><br><strong>Verify current merit scholarship amounts directly with ECU admissions</strong> &mdash; exact figures were not available at publication time.</div>
+</div>
+
+</div>
+</div>
+
+<div class="tier-section">
+<span class="tier-label t2">&#128202; Tier 2 &mdash; Solid Value ($100k&ndash;$140k / 4 years)</span>
+<div class="school-grid">
+
+<div class="card">
+<div class="sname">&#127958;&#65039; UNC Wilmington (UNCW)</div>
+<div class="svibe">Mid-size (18k), coastal campus in Wilmington, solid Honors College, beach-town lifestyle</div>
+<div class="tags"><span class="tag tc">Competitive Merit</span><span class="tag th">Honors College</span></div>
+<div class="pa-badge pb-gd">&#127939; Good Pre-Health &mdash; Biology B.S. available; pre-health advising offered; no on-campus PA program; Wilmington hospitals provide regional clinical access</div>
+<div class="cr"><span class="cl">Total COA / yr (2026-27, verified)</span><span class="cv">$30,325</span></div>
+<div class="cr"><span class="cl">Typical Honors Merit / yr</span><span class="cv m">&minus;$500&ndash;$2,000</span></div>
+<div class="cr"><span class="cl">Net Cost / yr (typical merit)</span><span class="cv n">~$28,300&ndash;$29,800</span></div>
+<div class="cr"><span class="cl">4-Year Estimate (typical merit)</span><span class="cv t">~$113,000&ndash;$119,000</span></div>
+<div class="notes">COA verified at $30,325 for 2026-27. The competitive <strong>Distinguished Merit Scholarship</strong> (full tuition) drops 4-year costs to ~$85&ndash;90k, pushing UNCW into Tier 1 territory.<br><br>Apply by <strong>Nov 1 (Early Action)</strong> for full scholarship consideration.</div>
+</div>
+
+<div class="card">
+<div class="sname">&#128105;&#8205;&#127979; Salem College</div>
+<div class="svibe">Tiny women&rsquo;s college (~500 undergrads), Winston-Salem &mdash; oldest women&rsquo;s college in the South (est. 1772)</div>
+<div class="tags"><span class="tag ta">Auto Merit ($21&ndash;26k/yr)</span><span class="tag tw">Women&rsquo;s College</span><span class="tag ts">Very Small</span></div>
+<div class="pa-badge pb-std">&#9898; Standard &mdash; Biology available; pre-health advising exists; limited dedicated pre-PA infrastructure given school size; Winston-Salem hospitals provide nearby clinical access</div>
+<div class="cr"><span class="cl">Total COA / yr</span><span class="cv">~$49,500</span></div>
+<div class="cr"><span class="cl">Auto Merit / yr (GPA-based, automatic)</span><span class="cv m">&minus;$21,000&ndash;$26,000</span></div>
+<div class="cr"><span class="cl">Net Cost / yr</span><span class="cv n">~$23,500&ndash;$28,500</span></div>
+<div class="cr"><span class="cl">4-Year Estimate</span><span class="cv t">$94,000&ndash;$114,000</span></div>
+<div class="notes">100% of students receive merit aid. With her GPA she lands at Trustee Award or Presidential Scholarship level ($21k&ndash;26k/yr, automatic). Full-ride named scholarships (Chatham, Elberson, Whitaker, Kick, Womble) require separate competitive applications.<br><br><strong>For PA:</strong> Incredible personal experience but limited science research infrastructure at ~500 students. The tradeoff is real for a PA-bound student.</div>
+</div>
+
+<div class="card">
+<div class="sname">&#128058; NC State University</div>
+<div class="svibe">Large research university (27k), STEM powerhouse, Raleigh &mdash; Triangle healthcare hub</div>
+<div class="tags"><span class="tag tc">Competitive Merit Only</span><span class="tag th">Honors College</span></div>
+<div class="pa-badge pb-str">&#9989; Strong Pre-PA &mdash; Dedicated pre-PA advising; Raleigh/Triangle is NC&rsquo;s top healthcare market; UNC Rex, WakeMed &amp; Duke Health nearby; strong pipeline to all NC PA programs</div>
+<div class="cr"><span class="cl">Total COA / yr (2026-27, verified)</span><span class="cv">$28,490</span></div>
+<div class="cr"><span class="cl">Auto Merit / yr</span><span class="cv m">$0 &mdash; no automatic merit</span></div>
+<div class="cr"><span class="cl">Net Cost / yr (no merit)</span><span class="cv n">$28,490</span></div>
+<div class="cr"><span class="cl">4-Year Estimate (no merit)</span><span class="cv t">~$114,000</span></div>
+<div class="notes"><strong>&#9888;&#65039; Complete Pack ASSIST portal immediately after applying</strong> &mdash; without it, you&rsquo;re not considered for any scholarship. Full-ride opportunities: <strong>Park Scholars</strong> (~40/yr) and <strong>Goodnight Scholars</strong> (STEM-focused). Both are extremely competitive.<br><br>Without merit, $28,490/yr in Raleigh is still excellent value for clinical access.</div>
+</div>
+
+<div class="card hl">
+<div class="sname">&#127963;&#65039; UNC Chapel Hill</div>
+<div class="svibe">Prestigious flagship (19k undergrads), Chapel Hill &mdash; one of the best public universities in the US</div>
+<div class="tags"><span class="tag tc">Competitive Merit</span><span class="tag th">Honors Carolina</span></div>
+<div class="pa-badge pb-top">&#127942; Has Own PA Program &mdash; UNC&rsquo;s PA program is one of NC&rsquo;s most prestigious; UNC undergrads have a recognized pipeline advantage; Office of Health Professions Advising is best-in-class</div>
+<div class="cr"><span class="cl">Total COA / yr (2026-27, verified)</span><span class="cv">$28,742</span></div>
+<div class="cr"><span class="cl">Auto Merit / yr</span><span class="cv m">$0 &mdash; merit is lottery-level rare</span></div>
+<div class="cr"><span class="cl">Net Cost / yr</span><span class="cv n">~$28,742</span></div>
+<div class="cr"><span class="cl">4-Year Estimate</span><span class="cv t">~$115,000</span></div>
+<div class="notes"><span class="b">&#127942; Top strategic pick for a PA-bound student.</span> UNC&rsquo;s PA Program is among NC&rsquo;s most respected; UNC undergrads benefit from faculty relationships and strong name recognition in PA admissions.<br><br><strong>&#9888;&#65039; Early Action deadline: Oct 15 &mdash; do not miss this.</strong> 19% acceptance rate. Morehead-Cain &amp; Robertson are life-changing but statistically don&rsquo;t count on them. Value = in-state pricing + PA pipeline.</div>
+</div>
+
+<div class="card">
+<div class="sname">&#128105;&#8205;&#127979; Meredith College</div>
+<div class="svibe">Small women&rsquo;s college (~1,600), Raleigh &mdash; tight-knit community; she visited and loves the campus</div>
+<div class="tags"><span class="tag ta">Auto Merit ($30k/yr guaranteed)</span><span class="tag tw">Women&rsquo;s College</span><span class="tag ts">Small</span></div>
+<div class="pa-badge pb-str">&#9989; Strong Pre-Health &mdash; Dedicated pre-health advising; articulation agreement with Methodist University PA Program; 90%+ health-school acceptance rate; same Raleigh clinical access as NC State</div>
+<div class="cr"><span class="cl">Total COA / yr (2025-26)</span><span class="cv">~$62,432</span></div>
+<div class="cr"><span class="cl">Auto Merit / yr (guaranteed, top tier)</span><span class="cv m">&minus;$30,000</span></div>
+<div class="cr"><span class="cl">Net Cost / yr</span><span class="cv n">~$32,432</span></div>
+<div class="cr"><span class="cl">4-Year Estimate</span><span class="cv t">~$130,000</span></div>
+<div class="notes"><span class="g">&#10003; $30,000/yr is guaranteed at the highest tier &mdash; no separate application needed.</span> The <strong>Meredith Presidential Scholarship</strong> is a full ride (~$230,000 total); avg recipient has <strong>4.65 GPA + 34 ACT</strong> &mdash; she&rsquo;s very close on GPA! A retake to 34+ makes this a real target.<br><br>The Methodist University PA articulation agreement provides a defined pathway to PA school. She already loves the campus &mdash; that matters for 4 years of intense science coursework.</div>
+</div>
+
+</div>
+</div>
+
+<div class="tier-section">
+<span class="tier-label t3">&#9888;&#65039; Tier 3 &mdash; Premium ($160k+ / 4 years)</span>
+<div class="school-grid">
+
+<div class="card">
+<div class="sname">&#10024; High Point University</div>
+<div class="svibe">Resort-like campus (~5k), High Point &mdash; luxury amenities, highly personalized environment</div>
+<div class="tags"><span class="tag tc">Competitive Merit</span><span class="tag th">Honors College</span></div>
+<div class="pa-badge pb-top">&#127942; Has Own PA Program &mdash; HPU graduate Master of PA Studies (27 months); pre-PA track built into Exercise Science B.S.; HPU undergrads have a real admissions edge into their own program</div>
+<div class="cr"><span class="cl">Total COA / yr (2026-27, verified)</span><span class="cv">$80,687</span></div>
+<div class="cr"><span class="cl">Avg Institutional Merit / yr</span><span class="cv m">&minus;~$23,000</span></div>
+<div class="cr"><span class="cl">Net Cost / yr (avg merit)</span><span class="cv n">~$57,687</span></div>
+<div class="cr"><span class="cl">4-Year Estimate (avg merit)</span><span class="cv t">~$231,000</span></div>
+<div class="notes">HPU undergrads with 3.2+ GPA have a structured pathway directly into HPU&rsquo;s PA program with no CASPA scramble. Exercise Science B.S. has a dedicated pre-PA track.<br><br>At ~$231k with average merit, hard to justify vs. App State + ECU for PA. The <strong>Presidential Founders Scholarship</strong> (full tuition) would change the math significantly.</div>
+</div>
+
+<div class="card hl">
+<div class="sname">&#127795; Elon University</div>
+<div class="svibe">Beautiful campus (~7k), Elon &mdash; exceptional undergraduate experience, engaged learning culture</div>
+<div class="tags"><span class="tag ta">Auto Merit (est. ~$12&ndash;14k/yr)</span><span class="tag th">Honors Fellows</span></div>
+<div class="pa-badge pb-top">&#127942; BEST PA PATHWAY IN NC &mdash; Accelerated Pathways Program = conditional direct-entry acceptance into Elon&rsquo;s own PA program from Day 1 of undergrad. First class graduated Dec 2025. Finish PA school ~1 semester faster. No CASPA scramble.</div>
+<div class="cr"><span class="cl">Total COA / yr (2026-27, verified)</span><span class="cv">$68,903</span></div>
+<div class="cr"><span class="cl">Est. Auto Merit / yr (ACT 32)</span><span class="cv m">&minus;$12,000&ndash;$14,000</span></div>
+<div class="cr"><span class="cl">Net Cost / yr</span><span class="cv n">~$55,000&ndash;$57,000</span></div>
+<div class="cr"><span class="cl">4-Year Estimate</span><span class="cv t">~$220,000&ndash;$228,000</span></div>
+<div class="notes"><span class="b">&#127775; The Accelerated Pathways program is genuinely unique in NC.</span> Admitted students get conditional PA school acceptance as a freshman. Requires maintaining 3.3 cumulative GPA and 3.0 science GPA. Top majors: Biology, Biochemistry, Exercise Science, Psychology.<br><br>The Honors Fellows program (separate application) may add more merit. At ~$220k, premium vs. App State is steep &mdash; but the <em>certainty</em> of a guaranteed PA seat has genuine value if PA is definitely the goal.</div>
+</div>
+
+<div class="card">
+<div class="sname">&#127794; Wake Forest University</div>
+<div class="svibe">Elite liberal arts university (~5k), Winston-Salem &mdash; small classes, exceptional research access</div>
+<div class="tags"><span class="tag tc">No Automatic Merit</span></div>
+<div class="pa-badge pb-top">&#127942; Has Own PA Program &mdash; Well-regarded WFU PA program; strong pre-PA culture; excellent research &amp; clinical shadowing at Atrium Health / WF Baptist Medical Center</div>
+<div class="cr"><span class="cl">Total COA / yr (est. 2026-27)</span><span class="cv">~$96,000</span></div>
+<div class="cr"><span class="cl">Auto Merit / yr</span><span class="cv m">$0 &mdash; no automatic merit</span></div>
+<div class="cr"><span class="cl">Net Cost / yr (no merit)</span><span class="cv n">~$96,000</span></div>
+<div class="cr"><span class="cl">4-Year Estimate (no merit)</span><span class="cv t">~$384,000</span></div>
+<div class="notes"><strong>Hard to recommend at full price.</strong> ACT mid-50% is 33&ndash;35 &mdash; ACT 32 is below median, making competitive merit unlikely without a retake. CSS Profile required for need-based aid.<br><br>If she retakes and scores 34&ndash;35 <em>and</em> wins a competitive scholarship, this becomes a completely different conversation. At $384k with no merit, very hard to justify.</div>
+</div>
+
+</div>
+</div>
+
+<div class="rank-sec">
+<h2>&#128200; Ranked by Estimated 4-Year Net Cost &nbsp;<span style="font-size:.75rem;font-weight:400;color:#718096">PA key: &#127942; own program &nbsp;&#9989; strong &nbsp;&#127939; good &nbsp;&#9898; standard</span></h2>
+<div class="ri"><span class="rn top">1</span><span class="rs">&#127956;&#65039; App State <em style="font-weight:400;color:#a0aec0;font-size:.8rem">w/ auto merit</em></span><div class="rb"><div class="rbf" style="width:23%"></div></div><span class="rc">~$88k</span><span class="rpa">&#9989;</span></div>
+<div class="ri"><span class="rn top">2</span><span class="rs">&#127973;&#65039; ECU <em style="font-weight:400;color:#a0aec0;font-size:.8rem">est. w/ merit</em></span><div class="rb"><div class="rbf" style="width:24%"></div></div><span class="rc">~$80&ndash;100k</span><span class="rpa">&#127942;</span></div>
+<div class="ri"><span class="rn top">3</span><span class="rs">&#128105;&#8205;&#127979; Salem <em style="font-weight:400;color:#a0aec0;font-size:.8rem">w/ auto merit</em></span><div class="rb"><div class="rbf" style="width:27%"></div></div><span class="rc">$94&ndash;114k</span><span class="rpa">&#9898;</span></div>
+<div class="ri"><span class="rn">4</span><span class="rs">&#127958;&#65039; UNCW <em style="font-weight:400;color:#a0aec0;font-size:.8rem">if Distinguished Merit</em></span><div class="rb"><div class="rbf" style="width:26%"></div></div><span class="rc">~$85&ndash;90k*</span><span class="rpa">&#127939;</span></div>
+<div class="ri"><span class="rn">5</span><span class="rs">&#128058; NC State <em style="font-weight:400;color:#a0aec0;font-size:.8rem">no merit</em></span><div class="rb"><div class="rbf" style="width:30%"></div></div><span class="rc">~$114k</span><span class="rpa">&#9989;</span></div>
+<div class="ri"><span class="rn">6</span><span class="rs">&#127963;&#65039; UNC Chapel Hill <em style="font-weight:400;color:#a0aec0;font-size:.8rem">no merit</em></span><div class="rb"><div class="rbf" style="width:30%"></div></div><span class="rc">~$115k</span><span class="rpa">&#127942;</span></div>
+<div class="ri"><span class="rn">7</span><span class="rs">&#127958;&#65039; UNCW <em style="font-weight:400;color:#a0aec0;font-size:.8rem">typical merit</em></span><div class="rb"><div class="rbf" style="width:31%"></div></div><span class="rc">~$113&ndash;119k</span><span class="rpa">&#127939;</span></div>
+<div class="ri"><span class="rn">8</span><span class="rs">&#128105;&#8205;&#127979; Meredith College</span><div class="rb"><div class="rbf" style="width:34%"></div></div><span class="rc">~$130k</span><span class="rpa">&#9989;</span></div>
+<div class="ri"><span class="rn">9</span><span class="rs">&#127795; Elon University</span><div class="rb"><div class="rbf" style="width:60%"></div></div><span class="rc">~$220&ndash;228k</span><span class="rpa">&#127942;</span></div>
+<div class="ri"><span class="rn">10</span><span class="rs">&#10024; High Point University</span><div class="rb"><div class="rbf" style="width:62%"></div></div><span class="rc">~$231k</span><span class="rpa">&#127942;</span></div>
+<div class="ri"><span class="rn">11</span><span class="rs">&#127794; Wake Forest University</span><div class="rb"><div class="rbf" style="width:100%"></div></div><span class="rc">~$384k</span><span class="rpa">&#127942;</span></div>
+<p style="font-size:.78rem;color:#a0aec0;margin-top:12px">* UNCW with Distinguished Merit (competitive, not guaranteed) could rank as high as #1. ECU merit figures are estimates &mdash; verify with admissions.</p>
+</div>
+
+<div class="act-box">
+<h2>&#127919; ACT Retake &mdash; What Unlocks If She Scores Higher?</h2>
+<div class="ar"><span class="ab">33</span><span class="au">Enters Wake Forest&rsquo;s mid-50% range (33&ndash;35) &mdash; Carswell, Reynolds, Stamps scholarships become more realistic. Meaningfully stronger candidacy for App State Chancellor&rsquo;s Scholarship and NC State Park/Goodnight Scholars. Above median at every school on this list.</span></div>
+<div class="ar"><span class="ab">34</span><span class="au"><strong>Meredith Presidential Scholarship becomes a serious target</strong> &mdash; avg recipient is 4.65 GPA + 34 ACT. With her 4.56 GPA, a 34 makes her a genuine Presidential contender (full ride, ~$230k total). Also substantially improves Chancellor&rsquo;s at App State and Park/Goodnight at NC State.</span></div>
+<div class="ar"><span class="ab">35+</span><span class="au"><strong>Top-tier competitive scholarship candidate at every school.</strong> Wake Forest merit becomes realistic. NC State Park Scholars, App State Chancellor&rsquo;s, Meredith Presidential &mdash; legitimate top-of-pool contender for all simultaneously. At 35 + 4.56 GPA she is a top-1% applicant everywhere.</span></div>
+</div>
+
+<div class="rank-sec" style="margin-top:24px">
+<h2>&#128506;&#65039; NC PA Programs &mdash; Where These Undergrads Can Feed</h2>
+<p style="font-size:.85rem;color:#718096;margin-bottom:16px">NC has 12+ accredited PA programs, all graduate-level (master&rsquo;s degree). You apply through CASPA during junior or senior year. Being near a school with its own PA program or near major clinical sites gives a meaningful advantage.</p>
+<div class="pa-map-grid">
+<div class="pmi"><strong>&#127795; Elon University PA</strong><span>Elon &middot; 24 months &middot; Direct-entry Accelerated Pathway from Elon undergrad</span></div>
+<div class="pmi"><strong>&#127963;&#65039; UNC Chapel Hill PA</strong><span>Chapel Hill &middot; Nationally ranked &middot; Strong UNC undergrad pipeline</span></div>
+<div class="pmi"><strong>&#127973;&#65039; East Carolina University PA</strong><span>Greenville &middot; 27 months &middot; Adjacent to Vidant Medical Center</span></div>
+<div class="pmi"><strong>&#10024; High Point University PA</strong><span>High Point &middot; 27 months (Master of PA Studies) &middot; HPU undergrad advantage</span></div>
+<div class="pmi"><strong>&#127794; Wake Forest University PA</strong><span>Winston-Salem &middot; Graduate level &middot; Atrium Health / WF Baptist Medical Center</span></div>
+<div class="pmi"><strong>&#128205; Campbell University PA</strong><span>Buies Creek &middot; 24 months &middot; Strong rural health focus</span></div>
+<div class="pmi"><strong>&#128205; Gardner-Webb University PA</strong><span>Boiling Springs &middot; 28 months &middot; Faith-based; competitive admissions</span></div>
+<div class="pmi"><strong>&#128205; Methodist University PA</strong><span>Fayetteville &middot; Articulation agreement with Meredith College grads</span></div>
+<div class="pmi"><strong>&#128205; Wingate University PA</strong><span>Wingate &middot; Growing program; health sciences focus</span></div>
+<div class="pmi"><strong>&#128205; Lenoir-Rhyne University PA</strong><span>Hickory &middot; Health sciences concentration</span></div>
+</div>
+</div>
+
+<div class="disc"><strong>&#9888;&#65039; Disclaimer:</strong> COA figures sourced from official university financial aid pages. UNCW ($30,325), NC State ($28,490), and UNC Chapel Hill ($28,742) are verified 2026&ndash;2027. App State (~$25,000) and ECU (~$25,500) estimated from 2025&ndash;2026 actuals. Elon ($68,903) and High Point ($80,687) are verified 2026&ndash;2027. Wake Forest (~$96,000) estimated from 2025&ndash;2026 actuals ($92,436). Meredith (~$62,432) and Salem (~$49,500) based on available 2025&ndash;2026 data. Merit amounts based on published criteria for 4.56 weighted GPA / ACT 32 profile. Competitive awards are never guaranteed. Always verify all figures directly with each school&rsquo;s financial aid and admissions offices.</div>
+
+<div class="footer"><p>Updated April 2026 &middot; COA figures verified from official sources &middot; Added PA pathway analysis, ECU, ACT impact table &amp; NC PA program map</p></div>
+
+</div>
+</body>
+</html>
